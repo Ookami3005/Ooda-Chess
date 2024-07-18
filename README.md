@@ -4,3 +4,5 @@
 
 > Tenemos pensado desarrollar una interfaz gráfica para el juego así como incluir todas las mecánicas necesarias del ajedrez (enroque, comer al paso, coronación), y hacerlo
 lo mas amigable posible para el usuario.
+
+> Primer proyecto de Ooda Corp jijija
