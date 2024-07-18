@@ -6,3 +6,7 @@
 lo mas amigable posible para el usuario.
 
 > Primer proyecto de Ooda Corp jijija
+
+## Notas:
+
+Comenzamos el desarrollo de las piezas del juego
