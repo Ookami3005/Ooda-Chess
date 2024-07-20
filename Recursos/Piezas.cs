@@ -12,29 +12,71 @@ namespace Recursos
         public Color bando { get; init; }
         public Casilla posicion { get; set; }
 
-        public abstract void posiblesMovimientos();
+        public abstract void PosiblesMovimientos();
 
-        public abstract void toString();
+        public abstract void ToString();
     }
 
     public class Peon : Pieza{
+        public  override void PosiblesMovimientos(){
+
+        }
+
+        public override void ToString(){
+
+        }
     }
 
     public class Caballo : Pieza{
-    }
+        public  override void PosiblesMovimientos(){
 
-    public class Alfil : Pieza{
-    }
+        }
 
-    public class Torre : Pieza{
+        public override void ToString(){
+
+        }
     }
 
     public class Reina : Pieza{
+        public  override void PosiblesMovimientos(){
+
+        }
+
+        public override void ToString(){
+
+        }
+    }
+
+    public class Torre : Pieza{
+        public  override void PosiblesMovimientos(){
+
+        }
+
+        public override void ToString(){
+
+        }
     }
 
     public class Rey : Pieza{
+        public  override void PosiblesMovimientos(){
+
+        }
+
+        public override void ToString(){
+
+        }
     }
-    
+
+    public class Alfil : Pieza{
+        public  override void PosiblesMovimientos(){
+
+        }
+
+        public override void ToString(){
+
+        }
+    }
+
     // Clase Peon (Ookami)
     // Clase Caballo (Ookami)
     // Clase Alfil (Amorcito)
