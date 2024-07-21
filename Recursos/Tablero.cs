@@ -37,10 +37,13 @@ namespace Recursos
         }
 
         // Campo privado que almacena el numero de la fila del tablero
+        // por qué le pones _ ?
         private int _fila;
 
         /*
          * Propiedad que regula el acceso y la modificacion a la fila del tablero
+         * No entiendo para qué es estoOoOOOoOoO, o sea, sé que asigna los números que pusiste en la enumeración pasada, pero como xq?
+         * tipo, ya lo hiciste en la enumeración Letra bro.
          */
         public int fila
         {
@@ -58,6 +61,7 @@ namespace Recursos
 
         /*
          * Propiedad que representa la columna del tablero
+         * Qué es get init? ununun
          */
         public Letra columna { get; init; }
 
@@ -82,6 +86,7 @@ namespace Recursos
 
     /*
      * Clase Casilla que modela una casilla o escaque del tablero
+     * A esto sí le entendí jijija
      */
     public class Casilla
     {
@@ -113,10 +118,12 @@ namespace Recursos
     public class Tablero
     {
         // Campo privado donde se almacena la matriz que representa el tablero
+        // xq pones la , dentro de []?
         private Casilla[,] matriz;
 
         /*
          * Propiedad Escaques que regula el acceso a la matriz representante del tablero
+         * No entiendo, si la matriz es el tablero y los escaques el tamblero tmb xq son diferentes?
          */
         public Casilla[,] Escaques
         {
@@ -133,6 +140,7 @@ namespace Recursos
             bool turno = false;
 
             // Definimos una matriz 8x8
+            //Xq la matriz se define hasta aca y no cuando la declaras al inicio
             matriz = new Casilla[8,8];
 
             // Iniciamos un bucle para recorrer la matriz
