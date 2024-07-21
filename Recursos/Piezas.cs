@@ -106,8 +106,9 @@ namespace Recursos
 
 // Bug (No tocar)
 //Como que bug?
-// Pues resulta que hay un bug con las versiones de esa clase y no existe para el compilador entonces la tenemos que hacer nosotros
+// - Pues resulta que hay un bug con las versiones de esa clase y no existe para el compilador entonces la tenemos que hacer nosotros
 //Pues no lo pongas y ya bro, poner bugs es malo, daah
+// - Si no la pongo no compila amor
 namespace System.Runtime.CompilerServices
 {
     internal static class IsExternalInit {}

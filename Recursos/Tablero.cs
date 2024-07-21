@@ -37,13 +37,19 @@ namespace Recursos
         }
 
         // Campo privado que almacena el numero de la fila del tablero
+        
         // por qué le pones _ ?
+        // - Para diferenciarlo de la propiedad publica de abajo, ademas por convencion de C#, asi se les pone a los campos privados
         private int _fila;
 
         /*
          * Propiedad que regula el acceso y la modificacion a la fila del tablero
+         */
+        /*
          * No entiendo para qué es estoOoOOOoOoO, o sea, sé que asigna los números que pusiste en la enumeración pasada, pero como xq?
          * tipo, ya lo hiciste en la enumeración Letra bro.
+         *
+         * - Las letras de arriba son exclusivamente para la columna, esto de fila es algo distinto, aqui me interesa que solo puedan asignar un numero entre 0 y 7
          */
         public int fila
         {
@@ -60,8 +66,16 @@ namespace Recursos
         }
 
         /*
-         * Propiedad que representa la columna del tablero
+         * Propiedad autoimplementada que representa la columna del tablero
+         */
+        /*
          * Qué es get init? ununun
+         * - Esto de aqui se llama propiedad autoimplementada, si ves arriba, yo implemente el get y el init, porque el init debia
+         *   cumplir ciertas condiciones especiales, sin embargo para la columna no es necesario, si quisiera implementarlas
+         *   seria trivialmente un get{return _columna} e init{_columna = value}. Poner el get; init; que puse abajo es una manera
+         *   cortisima de escribir justamente eso
+         *
+         *   Tambien, un init es simplemente un set, solo que solo lo puedes usar en el constructor, pero es eso, un set
          */
         public Letra columna { get; init; }
 
@@ -86,7 +100,10 @@ namespace Recursos
 
     /*
      * Clase Casilla que modela una casilla o escaque del tablero
+     */
+    /*
      * A esto sí le entendí jijija
+     * - <3
      */
     public class Casilla
     {
@@ -118,16 +135,25 @@ namespace Recursos
     public class Tablero
     {
         // Campo privado donde se almacena la matriz que representa el tablero
+        
         // xq pones la , dentro de []?
-        private Casilla[,] matriz;
+        // - Asi se escriben las matrices en C#, seria el equivalente a Casilla[][] en java
+        private Casilla[,] _matriz;
 
         /*
          * Propiedad Escaques que regula el acceso a la matriz representante del tablero
+         */
+        /*
          * No entiendo, si la matriz es el tablero y los escaques el tamblero tmb xq son diferentes?
+         * - La matriz es un campo privado, y solo quiero poder modificarlo yo, entonces declare un "envoltorio"
+         *   Escaques de solo lectura para regresarla si me la piden
+         *
+         *   Basicamente es como que solo le hice un getter y no un setter, y para no regresar el campo privado _matriz
+         *   regreso el alter ego Escaques
          */
         public Casilla[,] Escaques
         {
-            get => matriz;
+            get => _matriz;
         }
 
         /*
@@ -140,18 +166,21 @@ namespace Recursos
             bool turno = false;
 
             // Definimos una matriz 8x8
-            //Xq la matriz se define hasta aca y no cuando la declaras al inicio
-            matriz = new Casilla[8,8];
+            
+            // Xq la matriz se define hasta aca y no cuando la declaras al inicio
+            // - Realmente da lo mismo, podrias declararla al inicio o aqui
+            // Pero me gusta hacerlo aqui
+            _matriz = new Casilla[8,8];
 
             // Iniciamos un bucle para recorrer la matriz
             for(int i=0; i < 8 ;i++){
                 for(int j=0; j < 8 ;j++){
 
-                    // Definimos el elemento de la Enumeracion color por asignar
+                    // Definimos el elemento de la Enumeracion Color por asignar
                     Color color = turno ? Color.Blanco : Color.Negro;
 
                     // Creamos una nueva casilla en el matriz[i,j]
-                    matriz[i,j] = new Casilla(color, new Coordenada( i, (Coordenada.Letra)j ));
+                    _matriz[i,j] = new Casilla(color, new Coordenada( i, (Coordenada.Letra)j ));
 
                     // Alternamos el color para la siguiente casilla
                     turno = !turno;
