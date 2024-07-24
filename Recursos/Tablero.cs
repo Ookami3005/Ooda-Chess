@@ -37,7 +37,7 @@ namespace Recursos
         }
 
         // Campo privado que almacena el numero de la fila del tablero
-        
+
         // por qué le pones _ ?
         // - Para diferenciarlo de la propiedad publica de abajo, ademas por convencion de C#, asi se les pone a los campos privados
         private int _fila;
@@ -51,7 +51,7 @@ namespace Recursos
          *
          * - Las letras de arriba son exclusivamente para la columna, esto de fila es algo distinto, aqui me interesa que solo puedan asignar un numero entre 0 y 7
          */
-        public int fila
+        public int Fila
         {
             get => _fila;
             init
@@ -77,15 +77,15 @@ namespace Recursos
          *
          *   Tambien, un init es simplemente un set, solo que solo lo puedes usar en el constructor, pero es eso, un set
          */
-        public Letra columna { get; init; }
+        public Letra Columna { get; init; }
 
         /*
          * Constructor parametrizado simple de una Coordenada del tablero
          */
         public Coordenada(int row, Letra column)
         {
-            fila = row;
-            columna = column;
+            Fila = row;
+            Columna = column;
         }
 
         /*
@@ -93,7 +93,7 @@ namespace Recursos
          */
         public override string ToString()
         {
-            return $"{this.columna}{this.fila+1}";
+            return $"{this.Columna}{this.Fila+1}";
         }
 
     }
@@ -114,6 +114,12 @@ namespace Recursos
         public Color Tono { get; init; }
 
         /*
+         * Propiedad Trebejo que indica que Pieza esta colocada en esta casilla
+         * Devuelve null en caso de no haber ninguna pieza en ese momento
+         */
+        public Pieza Trebejo {get; set;}
+
+        /*
          * Propiedad Coordenadas que indica que coordenadas se le asignan a esta casilla
          * Solo puede asignarse durante la construccion del objeto
          */
@@ -126,7 +132,9 @@ namespace Recursos
         {
             Tono = tono;
             Coordenadas = coor;
+            Trebejo = null;
         }
+
     }
 
     /*
@@ -135,7 +143,7 @@ namespace Recursos
     public class Tablero
     {
         // Campo privado donde se almacena la matriz que representa el tablero
-        
+
         // xq pones la , dentro de []?
         // - Asi se escriben las matrices en C#, seria el equivalente a Casilla[][] en java
         private Casilla[,] _matriz;
@@ -157,6 +165,14 @@ namespace Recursos
         }
 
         /*
+         * Metodo MuestraCasilla que recibe como parametros una fila y una Letra y devuelve la Casilla correspondiente del tablero
+         *
+         * NOTA! Lo hice de tal manera que para los posibles movimientos podamos acceder a las casillas
+         * realmente utilizadas en el tablero del juego, evitando comparaciones
+         */
+        public Casilla MuestraCasilla(int fila, Coordenada.Letra columna) => _matriz[fila,(int)columna];
+
+        /*
          * Constructor por defecto que define una representacion de un Tablero convencional de ajedrez
          * (Tablero 8x8 con colores alternados)
          */
@@ -166,7 +182,7 @@ namespace Recursos
             bool turno = false;
 
             // Definimos una matriz 8x8
-            
+
             // Xq la matriz se define hasta aca y no cuando la declaras al inicio
             // - Realmente da lo mismo, podrias declararla al inicio o aqui
             // Pero me gusta hacerlo aqui
@@ -205,16 +221,26 @@ namespace Recursos
         public static void Main(string[] args)
         {
 
-            /*
-             * En esta seccion revise la correcta construccion de un objeto de la clase Tablero
-             */
             Tablero mesa = new Tablero();
+
+            // Pruebas de la correcta construccion de un objeto Tablero
+            /*
             for(int i=0; i<8 ; i++){
                 for(int j=0; j<8 ;j++){
                     Console.WriteLine(mesa.Escaques[i,j].Coordenadas.ToString() + " " + $"{mesa.Escaques[i,j].Tono}");
                 }
             }
+            */
 
+            // Prueba de la correcta movilidad de un Peon
+            Pieza peon = new Peon(Color.Negro);
+            Casilla demo = mesa.Escaques[6,0];
+            demo.Trebejo = peon;
+            // mesa.Escaques[5,1].Trebejo = new Caballo();
+            Console.WriteLine(demo.Trebejo);
+            foreach(Casilla moves in peon.PosiblesMovimientos(mesa, demo)){
+                Console.WriteLine(moves.Coordenadas);
+            }
         }
     }
 
