@@ -221,10 +221,9 @@ namespace Recursos
         public static void Main(string[] args)
         {
 
-            /*
-             * En esta seccion revise la correcta construccion de un objeto de la clase Tablero
-             */
             Tablero mesa = new Tablero();
+
+            // Pruebas de la correcta construccion de un objeto Tablero
             /*
             for(int i=0; i<8 ; i++){
                 for(int j=0; j<8 ;j++){
@@ -232,10 +231,14 @@ namespace Recursos
                 }
             }
             */
+
+            // Prueba de la correcta movilidad de un Peon
             Pieza peon = new Peon(Color.Negro);
-            mesa.Escaques[6,4].Trebejo = peon;
-            Console.WriteLine(mesa.Escaques[6,4].Trebejo);
-            foreach(Casilla moves in peon.PosiblesMovimientos(mesa.Escaques[6,4], mesa)){
+            Casilla demo = mesa.Escaques[6,0];
+            demo.Trebejo = peon;
+            // mesa.Escaques[5,1].Trebejo = new Caballo();
+            Console.WriteLine(demo.Trebejo);
+            foreach(Casilla moves in peon.PosiblesMovimientos(mesa, demo)){
                 Console.WriteLine(moves.Coordenadas);
             }
         }

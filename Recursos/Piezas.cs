@@ -39,7 +39,7 @@ namespace Recursos
         /*
          * Metodo abstracto que deja abierta la implementacion de los movimientos de la pieza
          */
-        public abstract List<Casilla> PosiblesMovimientos(Casilla actual, Tablero tablero);
+        public abstract List<Casilla> PosiblesMovimientos(Tablero tablero, Casilla actual);
 
         /*
          * Metodo abstracto sobreescrito ToString que deja abierta la implementacion de la cadena de texto
@@ -52,46 +52,74 @@ namespace Recursos
     /*
      * Clase Peon derivada de Pieza que modela las caracteristicas de un Peon del ajedrez
      *
-     * NOTA!!! Me falta implementar el ataque diagonal del peon
-     * Ademas falta pensar como implementar el comer al paso
+     * Falta pensar como implementar el comer al paso
      */
     public class Peon : Pieza{
 
         /*
          * Metodo sobreescrito que devuelve los posibles movimientos de un peon respecto a una casilla actual
          *
-         * NOTA:
-         * Esta implementado el avance de una casilla del peon y el avance de 2 casillas en caso de estar
-         * en segunda fila
          */
-        public  override List<Casilla> PosiblesMovimientos(Casilla actual, Tablero tablero)
+        public  override List<Casilla> PosiblesMovimientos(Tablero tablero, Casilla actual)
         {
             List<Casilla> lista = new List<Casilla>();
+            lista = this.movimientosRegulares(tablero, actual, lista);
+            lista = this.ataquesDiagonales(tablero, actual, lista);
+            return lista;
+        }
+
+        /*
+         * Metodo auxiliar que calcula los movimientos regulares de un Peon y agrega las casillas a la lista de movimientos
+         * Es decir, avanzar una casilla hacia al frente o 2 si se encuentra en la segunda fila
+         * de su respectivo bando.
+         */
+        private List<Casilla> movimientosRegulares(Tablero tablero, Casilla actual, List<Casilla> lista){
             int filaActual = actual.Coordenadas.Fila;
             bool esBlanco = this.Bando == Color.Blanco;
             int segundaFila = esBlanco ? 1 : 6, ultimaFila = esBlanco ? 7 : 0;
             int filaSiguiente = esBlanco ? filaActual+1 : filaActual-1;
             if(filaActual != ultimaFila){
-                lista.Add(tablero.MuestraCasilla(filaSiguiente,actual.Coordenadas.Columna));
+                Casilla casillaSiguiente = tablero.MuestraCasilla(filaSiguiente,actual.Coordenadas.Columna);
+                if(casillaSiguiente.Trebejo == null){
+                    lista.Add(casillaSiguiente);
+                }
             }
-            if(filaActual == segundaFila){
-                lista.Add(tablero.MuestraCasilla((filaSiguiente+1),actual.Coordenadas.Columna));
+
+            if(lista.Count != 0 && filaActual == segundaFila){
+                int filaSiguienteSiguiente = esBlanco ? filaSiguiente+1 : filaSiguiente - 1;
+                Casilla casillaSiguienteSiguiente = tablero.MuestraCasilla(filaSiguienteSiguiente,actual.Coordenadas.Columna);
+                if(casillaSiguienteSiguiente.Trebejo == null){
+                    lista.Add(casillaSiguienteSiguiente);
+                }
+            }
+            return lista;
+        }
+
+        /*
+         * Metodo auxiliar que calcula si el peon puede realizar movimientos en diagonal para atacar a otra pieza
+         * Agrega las casillas a la lista de movimientos
+         */
+        private List<Casilla> ataquesDiagonales(Tablero tablero, Casilla actual, List<Casilla> lista){
+            bool esBlanco = this.Bando == Color.Blanco;
+            int filaSiguiente = esBlanco ? actual.Coordenadas.Fila+1 : actual.Coordenadas.Fila-1, columnaActual = (int)actual.Coordenadas.Columna;
+            Casilla diagIzquierda = (-1 < filaSiguiente) && (filaSiguiente < 8) && (columnaActual-1) > 0 ? tablero.MuestraCasilla(filaSiguiente, (Coordenada.Letra)(columnaActual-1)) : null;
+            Casilla diagDerecha = (-1 < filaSiguiente) && (filaSiguiente < 8) && (columnaActual+1) < 8 ? tablero.MuestraCasilla(filaSiguiente, (Coordenada.Letra)(columnaActual+1)) : null;
+            if(diagIzquierda != null && diagIzquierda.Trebejo != null){
+                lista.Add(diagIzquierda);
+            }
+            if(diagDerecha != null && diagDerecha.Trebejo != null){
+                lista.Add(diagDerecha);
             }
             return lista;
         }
 
         /*
          * Devuelve el caracter Unicode de un peon del color correspondiente
-         *
-         * NOTA: Devuelvo el blanco cuando me piden el negro y viceversa
-         * Es que el peon blanco es "transparente" entonces por el fondo de la terminal se ve negro
-         * Y el negro es de color solido entonces es completamente blanco
-         * XD
          */
-        public override string ToString() => this.Bando != Color.Blanco ? "\u265F" : "\u2659";
+        public override string ToString() => this.Bando != Color.Blanco ? "\u2659" : "\u265F";
 
         /*
-         * COnstructor parametrizado simple de un Peon, definiendo su color
+         * Constructor parametrizado simple de un Peon, definiendo su color
          */
         public Peon(Color color){
             this.Bando = color;
@@ -100,7 +128,7 @@ namespace Recursos
     }
 
     public class Caballo : Pieza{
-        public  override List<Casilla> PosiblesMovimientos(Casilla actual, Tablero tablero)
+        public  override List<Casilla> PosiblesMovimientos(Tablero tablero, Casilla actual)
         {
             return null;
 
@@ -113,7 +141,7 @@ namespace Recursos
     }
 
     public class Dama : Pieza{
-        public  override List<Casilla> PosiblesMovimientos(Casilla actual, Tablero tablero)
+        public  override List<Casilla> PosiblesMovimientos(Tablero tablero, Casilla actual)
         {
             return null;
 
@@ -126,7 +154,7 @@ namespace Recursos
     }
 
     public class Torre : Pieza{
-        public  override List<Casilla> PosiblesMovimientos(Casilla actual, Tablero tablero)
+        public  override List<Casilla> PosiblesMovimientos(Tablero tablero, Casilla actual)
         {
             return null;
 
@@ -139,7 +167,7 @@ namespace Recursos
     }
 
     public class Rey : Pieza{
-        public  override List<Casilla> PosiblesMovimientos(Casilla actual, Tablero tablero)
+        public  override List<Casilla> PosiblesMovimientos(Tablero tablero, Casilla actual)
         {
             return null;
 
@@ -152,7 +180,7 @@ namespace Recursos
     }
 
     public class Alfil : Pieza{
-        public  override List<Casilla> PosiblesMovimientos(Casilla actual, Tablero tablero)
+        public  override List<Casilla> PosiblesMovimientos(Tablero tablero, Casilla actual)
         {
             return null;
 
