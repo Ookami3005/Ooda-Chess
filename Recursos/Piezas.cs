@@ -73,10 +73,10 @@ namespace Recursos
          * Es decir, avanzar una casilla hacia al frente o 2 si se encuentra en la segunda fila
          * de su respectivo bando.
          */
-        private List<Casilla> movimientosRegulares(Tablero tablero, Casilla actual, List<Casilla> lista){
+private List<Casilla> movimientosRegulares(Tablero tablero, Casilla actual, List<Casilla> lista){
             int filaActual = actual.Coordenadas.Fila;
             bool esBlanco = this.Bando == Color.Blanco;
-            int segundaFila = esBlanco ? 1 : 6, ultimaFila = esBlanco ? 7 : 0;
+            int segundaFila = esBlanco ? 1 : 6, ultimaFila = esBlanco ? 7 : 0; //Es necesario definir todo esto siempre?
             int filaSiguiente = esBlanco ? filaActual+1 : filaActual-1;
             if(filaActual != ultimaFila){
                 Casilla casillaSiguiente = tablero.MuestraCasilla(filaSiguiente,actual.Coordenadas.Columna);
@@ -85,7 +85,7 @@ namespace Recursos
                 }
             }
 
-            if(lista.Count != 0 && filaActual == segundaFila){
+            if(lista.Count != 0 && filaActual == segundaFila){ //no le entendí a este
                 int filaSiguienteSiguiente = esBlanco ? filaSiguiente+1 : filaSiguiente - 1;
                 Casilla casillaSiguienteSiguiente = tablero.MuestraCasilla(filaSiguienteSiguiente,actual.Coordenadas.Columna);
                 if(casillaSiguienteSiguiente.Trebejo == null){
@@ -133,7 +133,7 @@ namespace Recursos
             return null;
 
         }
-
+  
         public override string ToString()
         {
             return "";
@@ -167,16 +167,66 @@ namespace Recursos
     }
 
     public class Rey : Pieza{
+        /*
+         * Metodo sobreescrito que devuelve los posibles movimientos del rey en el tablero
+         *
+         */
         public  override List<Casilla> PosiblesMovimientos(Tablero tablero, Casilla actual)
         {
-            return null;
-
+            List<Casilla> lista = new List<Casilla>();
+            lista = this.movimientosRegulares(tablero, actual, lista);
+            lista = this.ataquesDiagonales(tablero, actual, lista);
+            return lista;
         }
 
-        public override string ToString()
-        {
-            return "";
+        /*
+         * Metodo que agrega los movimientos en horizontal y vertical del rey a la lista de posibles movimientos.
+         *
+        */
+        private List<Casilla> movimientosRegulares(Tablero tablero, Casilla actual, List<Casilla> lista){
+            int filaActual = actual.Coordenadas.Fila;
+            bool esBlanco = this.Bando == Color.Blanco;
+            int segundaFila = esBlanco ? 1 : 6, ultimaFila = esBlanco ? 7 : 0, primerFila = esBlanco ? 0 : 7;
+            int columnaActual = (int)actual.Coordenadas.Columna;
+            int filaSiguiente = esBlanco ? filaActual+1 : filaActual-1;
+
+            //Movimientos verticales
+            if(filaActual != ultimaFila){
+                int filaAnterior = esBlanco ? filaActual-1 : filaActual+1;
+                Casilla casillaSiguiente = tablero.MuestraCasilla(filaSiguiente,actual.Coordenadas.Columna); 
+                Casilla casillaAnterior = tablero.MuestraCasilla(filaAnterior, actual.Coordenadas.Columna);
+                if(casillaSiguiente.Trebejo == null){
+                    lista.Add(casillaSiguiente);
+                }
+                if(filaActual != primerFila){
+                    if(casillaAnterior.Trebejo == null){
+                        lista.Add(casillaAnterior);
+                    }   
+                }
+            }
+
+            //Movimientos horizontales
+            return lista;
         }
+
+        private List<Casilla> ataquesDiagonales(Tablero tablero, Casilla actual, List<Casilla> lista){
+            bool esBlanco = this.Bando == Color.Blanco;
+            int filaSiguiente = esBlanco ? actual.Coordenadas.Fila+1 : actual.Coordenadas.Fila-1, columnaActual = (int)actual.Coordenadas.Columna;
+            Casilla diagIzquierda = (-1 < filaSiguiente) && (filaSiguiente < 8) && (columnaActual-1) > 0 ? tablero.MuestraCasilla(filaSiguiente, (Coordenada.Letra)(columnaActual-1)) : null;
+            Casilla diagDerecha = (-1 < filaSiguiente) && (filaSiguiente < 8) && (columnaActual+1) < 8 ? tablero.MuestraCasilla(filaSiguiente, (Coordenada.Letra)(columnaActual+1)) : null;
+            if(diagIzquierda != null && diagIzquierda.Trebejo != null){
+                lista.Add(diagIzquierda);
+            }
+            if(diagDerecha != null && diagDerecha.Trebejo != null){
+                lista.Add(diagDerecha);
+            }
+            return lista;
+        }
+
+        /*
+         * Devuelve el caracter Unicode de un peon del color correspondiente
+         */
+        public override string ToString() => this.Bando != Color.Blanco ? "\u2654" : "\u265A";
     }
 
     public class Alfil : Pieza{
