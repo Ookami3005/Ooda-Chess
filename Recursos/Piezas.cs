@@ -206,19 +206,38 @@ private List<Casilla> movimientosRegulares(Tablero tablero, Casilla actual, List
             }
 
             //Movimientos horizontales
+            Casilla izq = (columnaActual-1) > -1 ? tablero.MuestraCasilla(filaActual, (Coordenada.Letra)(columnaActual-1)) : null;
+            Casilla der = (columnaActual+1) < 8 ? tablero.MuestraCasilla(filaActual, (Coordenada.Letra)(columnaActual+1)) : null;
+            if(columnaActual != 0 ){
+                lista.Add(izq);
+            }
+            if(columnaActual != 8){
+                lista.Add(der);
+            }
             return lista;
         }
 
+        //Checar nuevamente condiciones < 
         private List<Casilla> ataquesDiagonales(Tablero tablero, Casilla actual, List<Casilla> lista){
+            int filaActual = actual.Coordenadas.Fila;
             bool esBlanco = this.Bando == Color.Blanco;
             int filaSiguiente = esBlanco ? actual.Coordenadas.Fila+1 : actual.Coordenadas.Fila-1, columnaActual = (int)actual.Coordenadas.Columna;
-            Casilla diagIzquierda = (-1 < filaSiguiente) && (filaSiguiente < 8) && (columnaActual-1) > 0 ? tablero.MuestraCasilla(filaSiguiente, (Coordenada.Letra)(columnaActual-1)) : null;
-            Casilla diagDerecha = (-1 < filaSiguiente) && (filaSiguiente < 8) && (columnaActual+1) < 8 ? tablero.MuestraCasilla(filaSiguiente, (Coordenada.Letra)(columnaActual+1)) : null;
-            if(diagIzquierda != null && diagIzquierda.Trebejo != null){
-                lista.Add(diagIzquierda);
+            int filaAnterior = esBlanco ? filaActual-1 : filaActual+1;
+            Casilla diagDerechaSup = (-1 < filaSiguiente) && (filaSiguiente < 8) && (columnaActual+1) < 8 ? tablero.MuestraCasilla(filaSiguiente, (Coordenada.Letra)(columnaActual+1)) : null;
+            Casilla diagIzquierdaSup = (-1 < filaSiguiente) && (filaSiguiente < 8) && (columnaActual-1) >-1 ? tablero.MuestraCasilla(filaSiguiente, (Coordenada.Letra)(columnaActual-1)) : null;
+            Casilla diagDerInf = (-1 < filaAnterior) && (filaAnterior < 8) && (columnaActual+1) < 8 ? tablero.MuestraCasilla(filaAnterior, (Coordenada.Letra)(columnaActual+1)) : null;
+            Casilla diagIzqInf = (-1 < filaAnterior) && (filaAnterior < 8) && (columnaActual-1) > -1 ? tablero.MuestraCasilla(filaAnterior, (Coordenada.Letra)(columnaActual-1)) : null;
+            if((-1 < filaSiguiente) && (filaSiguiente < 8) && (columnaActual+1) < 8 ){
+                lista.Add(diagDerechaSup);
             }
-            if(diagDerecha != null && diagDerecha.Trebejo != null){
-                lista.Add(diagDerecha);
+            if((-1 < filaSiguiente) && (filaSiguiente < 8) && (columnaActual-1) >-1){
+                lista.Add(diagIzquierdaSup);
+            }
+            if((-1 < filaAnterior) && (filaAnterior < 8) && (columnaActual+1) < 8 ){
+                lista.Add(diagDerInf);
+            }
+            if((-1 < filaAnterior) && (filaAnterior < 8) && (columnaActual+1) < 8 ){
+                lista.Add(diagIzqInf);
             }
             return lista;
         }
