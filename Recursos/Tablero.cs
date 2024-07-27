@@ -241,6 +241,14 @@ namespace Recursos
             foreach(Casilla moves in peon.PosiblesMovimientos(mesa, demo)){
                 Console.WriteLine(moves.Coordenadas);
             }
+
+            Pieza rey = new Rey(Color.Blanco);
+            Casilla demo2 = mesa.Escaques[7,4];
+            demo2.Trebejo = rey;
+            Console.WriteLine(demo2.Trebejo);
+            foreach(Casilla moves in rey.PosiblesMovimientos(mesa, demo2)){
+                Console.WriteLine(moves.Coordenadas);
+            }
         }
     }
 

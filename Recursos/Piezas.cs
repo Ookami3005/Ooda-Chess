@@ -73,7 +73,7 @@ namespace Recursos
          * Es decir, avanzar una casilla hacia al frente o 2 si se encuentra en la segunda fila
          * de su respectivo bando.
          */
-private List<Casilla> movimientosRegulares(Tablero tablero, Casilla actual, List<Casilla> lista){
+        private List<Casilla> movimientosRegulares(Tablero tablero, Casilla actual, List<Casilla> lista){
             int filaActual = actual.Coordenadas.Fila;
             bool esBlanco = this.Bando == Color.Blanco;
             int segundaFila = esBlanco ? 1 : 6, ultimaFila = esBlanco ? 7 : 0; //Es necesario definir todo esto siempre?
@@ -191,6 +191,10 @@ private List<Casilla> movimientosRegulares(Tablero tablero, Casilla actual, List
             int filaSiguiente = esBlanco ? filaActual+1 : filaActual-1;
 
             //Movimientos verticales
+            //Tengo un error en estoooooooooooooooo, es que o sea, cuando el rey no esta en la ultima o primera fila 
+            //Todo jala bien, pero cuando esta en una de esas, no jalan los movimientos verticales, sé que basicamente ya
+            //lo tengo porque tengo bien las diagonales, pero es que no entiendo xq no jalaA, cuando he tratado de corregirlo me 
+            //aparece que se sale del index pero pero pero según yo noOoOo
             if(filaActual != ultimaFila){
                 int filaAnterior = esBlanco ? filaActual-1 : filaActual+1;
                 Casilla casillaSiguiente = tablero.MuestraCasilla(filaSiguiente,actual.Coordenadas.Columna); 
@@ -217,7 +221,7 @@ private List<Casilla> movimientosRegulares(Tablero tablero, Casilla actual, List
             return lista;
         }
 
-        //Checar nuevamente condiciones < 
+        //Movimientos diagonales
         private List<Casilla> ataquesDiagonales(Tablero tablero, Casilla actual, List<Casilla> lista){
             int filaActual = actual.Coordenadas.Fila;
             bool esBlanco = this.Bando == Color.Blanco;
@@ -246,7 +250,16 @@ private List<Casilla> movimientosRegulares(Tablero tablero, Casilla actual, List
          * Devuelve el caracter Unicode de un peon del color correspondiente
          */
         public override string ToString() => this.Bando != Color.Blanco ? "\u2654" : "\u265A";
+
+        /*
+         * Constructor parametrizado simple de un Peon, definiendo su color
+         */
+        public Rey(Color color){
+            this.Bando = color;
+        }
     }
+
+
 
     public class Alfil : Pieza{
         public  override List<Casilla> PosiblesMovimientos(Tablero tablero, Casilla actual)
