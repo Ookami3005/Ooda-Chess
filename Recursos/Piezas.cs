@@ -134,9 +134,16 @@ namespace Recursos
 
         }
   
-        public override string ToString()
-        {
-            return "";
+        /*
+         * Devuelve el caracter Unicode de un caballo del color correspondiente
+         */
+        public override string ToString() => this.Bando != Color.Blanco ? "\u2658" : "\u265E";
+
+        /*
+         * Constructor parametrizado simple de un caballo, definiendo su color
+         */
+        public Caballo(Color color){
+            this.Bando = color;
         }
     }
 
@@ -147,9 +154,16 @@ namespace Recursos
 
         }
 
-        public override string ToString()
-        {
-            return "";
+        /*
+         * Devuelve el caracter Unicode de un dama del color correspondiente
+         */
+        public override string ToString() => this.Bando != Color.Blanco ? "\u2655" : "\u265B";
+
+        /*
+         * Constructor parametrizado simple de una dama, definiendo su color
+         */
+        public Dama(Color color){
+            this.Bando = color;
         }
     }
 
@@ -160,9 +174,16 @@ namespace Recursos
 
         }
 
-        public override string ToString()
-        {
-            return "";
+        /*
+         * Devuelve el caracter Unicode de una torre del color correspondiente
+         */
+        public override string ToString() => this.Bando != Color.Blanco ? "\u2656" : "\u265C";
+
+        /*
+         * Constructor parametrizado simple de una torre, definiendo su color
+         */
+        public Torre(Color color){
+            this.Bando = color;
         }
     }
 
@@ -247,12 +268,12 @@ namespace Recursos
         }
 
         /*
-         * Devuelve el caracter Unicode de un peon del color correspondiente
+         * Devuelve el caracter Unicode de un rey del color correspondiente
          */
         public override string ToString() => this.Bando != Color.Blanco ? "\u2654" : "\u265A";
 
         /*
-         * Constructor parametrizado simple de un Peon, definiendo su color
+         * Constructor parametrizado simple de un Rey, definiendo su color
          */
         public Rey(Color color){
             this.Bando = color;
@@ -268,9 +289,16 @@ namespace Recursos
 
         }
 
-        public override string ToString()
-        {
-            return "";
+        /*
+         * Devuelve el caracter Unicode de un alfil del color correspondiente
+         */
+        public override string ToString() => this.Bando != Color.Blanco ? "\u2657" : "\u265D";
+
+        /*
+         * Constructor parametrizado simple de un alfil, definiendo su color
+         */
+        public Alfil(Color color){
+            this.Bando = color;
         }
     }
 
