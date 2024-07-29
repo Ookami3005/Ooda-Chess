@@ -207,8 +207,10 @@ namespace Recursos
         private List<Casilla> movimientosRegulares(Tablero tablero, Casilla actual, List<Casilla> lista){
             int filaActual = actual.Coordenadas.Fila;
             bool esBlanco = this.Bando == Color.Blanco;
+            // -No ocupas estas variables
             int segundaFila = esBlanco ? 1 : 6, ultimaFila = esBlanco ? 7 : 0, primerFila = esBlanco ? 0 : 7;
             int columnaActual = (int)actual.Coordenadas.Columna;
+            // -Mucho menos esta
             int filaSiguiente = esBlanco ? filaActual+1 : filaActual-1;
 
             //Movimientos verticales
@@ -217,25 +219,32 @@ namespace Recursos
             //lo tengo porque tengo bien las diagonales, pero es que no entiendo xq no jalaA, cuando he tratado de corregirlo me 
             //aparece que se sale del index pero pero pero según yo noOoOo
             if(filaActual != ultimaFila){
+                // - Tampoco ocupas esta
                 int filaAnterior = esBlanco ? filaActual-1 : filaActual+1;
+                // - Esta bien pero como usas los ternarios estas haciendo cosas extra
                 Casilla casillaSiguiente = tablero.MuestraCasilla(filaSiguiente,actual.Coordenadas.Columna); 
                 Casilla casillaAnterior = tablero.MuestraCasilla(filaAnterior, actual.Coordenadas.Columna);
+                // Esta bien pero no revisas que no exceda la ultima fila
                 if(casillaSiguiente.Trebejo == null){
                     lista.Add(casillaSiguiente);
                 }
+                // - Esto si esta bien
                 if(filaActual != primerFila){
                     if(casillaAnterior.Trebejo == null){
                         lista.Add(casillaAnterior);
-                    }   
+                    }
                 }
             }
 
             //Movimientos horizontales
+            // Bien
             Casilla izq = (columnaActual-1) > -1 ? tablero.MuestraCasilla(filaActual, (Coordenada.Letra)(columnaActual-1)) : null;
             Casilla der = (columnaActual+1) < 8 ? tablero.MuestraCasilla(filaActual, (Coordenada.Letra)(columnaActual+1)) : null;
+            // - Lo que hiciste arriba ya esta cuidando que las columnas no excedan los limites, la condicional que debias checar es otra
             if(columnaActual != 0 ){
                 lista.Add(izq);
             }
+            // - Lo de arriba x2
             if(columnaActual != 8){
                 lista.Add(der);
             }
@@ -246,12 +255,17 @@ namespace Recursos
         private List<Casilla> ataquesDiagonales(Tablero tablero, Casilla actual, List<Casilla> lista){
             int filaActual = actual.Coordenadas.Fila;
             bool esBlanco = this.Bando == Color.Blanco;
+            // Otra vez no ocupas todo esto
             int filaSiguiente = esBlanco ? actual.Coordenadas.Fila+1 : actual.Coordenadas.Fila-1, columnaActual = (int)actual.Coordenadas.Columna;
             int filaAnterior = esBlanco ? filaActual-1 : filaActual+1;
             Casilla diagDerechaSup = (-1 < filaSiguiente) && (filaSiguiente < 8) && (columnaActual+1) < 8 ? tablero.MuestraCasilla(filaSiguiente, (Coordenada.Letra)(columnaActual+1)) : null;
             Casilla diagIzquierdaSup = (-1 < filaSiguiente) && (filaSiguiente < 8) && (columnaActual-1) >-1 ? tablero.MuestraCasilla(filaSiguiente, (Coordenada.Letra)(columnaActual-1)) : null;
             Casilla diagDerInf = (-1 < filaAnterior) && (filaAnterior < 8) && (columnaActual+1) < 8 ? tablero.MuestraCasilla(filaAnterior, (Coordenada.Letra)(columnaActual+1)) : null;
             Casilla diagIzqInf = (-1 < filaAnterior) && (filaAnterior < 8) && (columnaActual-1) > -1 ? tablero.MuestraCasilla(filaAnterior, (Coordenada.Letra)(columnaActual-1)) : null;
+
+            /*
+             * - Para estas 4 condicionales: Lo de la linea 243 x4 (Debias condicionar otra cosa)
+             */
             if((-1 < filaSiguiente) && (filaSiguiente < 8) && (columnaActual+1) < 8 ){
                 lista.Add(diagDerechaSup);
             }
