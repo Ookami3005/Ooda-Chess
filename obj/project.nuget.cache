@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "ysYYF9L9eCpgj4urbPf5DD3NTAsetghmDzF18qAVhcBavcMIEONA37mBE5h/i+CTAeK9Le//NTCg3phYHojfkQ==",
+  "success": true,
+  "projectFilePath": "/home/Ookami/Ooda/Ooda-Chess/Ooda-Chess.csproj",
+  "expectedPackageFiles": [
+    "/home/Ookami/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.7/microsoft.aspnetcore.app.ref.8.0.7.nupkg.sha512"
+  ],
+  "logs": []
+}
