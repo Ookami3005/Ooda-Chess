@@ -6,6 +6,7 @@ using System.Collections.Generic;
  * Autores:
  * - dannaliz
  * - Ookami5018
+ * - juanchoeh
  *
  * En este archivo definimos una parte de los recursos que utlizaremos para Ooda Chess
  * Particularmente son aquellos que tienen que ver con las Piezas del juego
@@ -24,9 +25,6 @@ namespace Recursos
 
     /*
      * Clase abstracta Pieza que modela las caracteristicas basicas de una pieza del ajedrez
-     *
-     * NOTA: Amor, decidi quitarle la propiedad Coordenada y pasarsela como parametro al metodo
-     * Creo que es mas eficiente asi
      */
     public abstract class Pieza
     {
@@ -37,9 +35,19 @@ namespace Recursos
         public Color Bando { get; init; }
 
         /*
+         * Propiedad que regula el acceso al Tablero en el que se encuentra la Pieza
+         */
+        public Tablero Mesa { get; init;}
+
+        /*
+         * Propiedad que regula el acceso a la casilla actual de la Pieza
+         */
+        public Casilla PosicionActual {get; set;}
+
+        /*
          * Metodo abstracto que deja abierta la implementacion de los movimientos de la pieza
          */
-        public abstract List<Casilla> PosiblesMovimientos(Tablero tablero, Casilla actual);
+        public abstract List<Casilla> PosiblesMovimientos();
 
         /*
          * Metodo abstracto sobreescrito ToString que deja abierta la implementacion de la cadena de texto
@@ -57,14 +65,16 @@ namespace Recursos
     public class Peon : Pieza{
 
         /*
-         * Metodo sobreescrito que devuelve los posibles movimientos de un peon respecto a una casilla actual
+         * Metodo sobreescrito que devuelve los posibles movimientos de un peon respecto a una casilla PosicionActual
          *
          */
-        public  override List<Casilla> PosiblesMovimientos(Tablero tablero, Casilla actual)
+        public  override List<Casilla> PosiblesMovimientos()
         {
-            List<Casilla> lista = new List<Casilla>();
-            lista = this.movimientosRegulares(tablero, actual, lista);
-            lista = this.ataquesDiagonales(tablero, actual, lista);
+            List<Casilla> lista = new();
+
+            lista = this.movimientosRegulares(lista);
+            lista = this.ataquesDiagonales(lista);
+
             return lista;
         }
 
@@ -73,25 +83,43 @@ namespace Recursos
          * Es decir, avanzar una casilla hacia al frente o 2 si se encuentra en la segunda fila
          * de su respectivo bando.
          */
-        private List<Casilla> movimientosRegulares(Tablero tablero, Casilla actual, List<Casilla> lista){
-            int filaActual = actual.Coordenadas.Fila;
+        private List<Casilla> movimientosRegulares(List<Casilla> lista)
+        {
+            int filaActual = this.PosicionActual.Coordenadas.Fila;
             bool esBlanco = this.Bando == Color.Blanco;
             int segundaFila = esBlanco ? 1 : 6, ultimaFila = esBlanco ? 7 : 0;
             int filaSiguiente = esBlanco ? filaActual+1 : filaActual-1;
-            if(filaActual != ultimaFila){
-                Casilla casillaSiguiente = tablero.MuestraCasilla(filaSiguiente,actual.Coordenadas.Columna);
-                if(casillaSiguiente.Trebejo == null){
+
+            /*
+             * Mientras el peon no se encuentre en la ultima fila, consulta si la casilla siguiente esta vacia
+             * y en caso de estarlo, la agrega a la lista de movimientos
+             */
+            if(filaActual != ultimaFila)
+            {
+                Casilla casillaSiguiente = this.Mesa.MuestraCasilla(filaSiguiente, this.PosicionActual.Coordenadas.Columna);
+
+                if(casillaSiguiente.Trebejo == null)
+                {
                     lista.Add(casillaSiguiente);
                 }
             }
 
-            if(lista.Count != 0 && filaActual == segundaFila){
+            /*
+             * Si el peon se encuentra en la segunda fila y ya se ha agregado una casilla a la lista
+             * (es decir, se pudo agregar la casilla siguiente), entonces se revisa si hay una pieza en la segunda casilla
+             * y de no haber, se agrega a la lista de movimientos
+             */
+            if(lista.Count != 0 && filaActual == segundaFila)
+            {
                 int filaSiguienteSiguiente = esBlanco ? filaSiguiente+1 : filaSiguiente - 1;
-                Casilla casillaSiguienteSiguiente = tablero.MuestraCasilla(filaSiguienteSiguiente,actual.Coordenadas.Columna);
-                if(casillaSiguienteSiguiente.Trebejo == null){
+                Casilla casillaSiguienteSiguiente = this.Mesa.MuestraCasilla(filaSiguienteSiguiente, this.PosicionActual.Coordenadas.Columna);
+
+                if(casillaSiguienteSiguiente.Trebejo == null)
+                {
                     lista.Add(casillaSiguienteSiguiente);
                 }
             }
+
             return lista;
         }
 
@@ -99,17 +127,23 @@ namespace Recursos
          * Metodo auxiliar que calcula si el peon puede realizar movimientos en diagonal para atacar a otra pieza
          * Agrega las casillas a la lista de movimientos
          */
-        private List<Casilla> ataquesDiagonales(Tablero tablero, Casilla actual, List<Casilla> lista){
+        private List<Casilla> ataquesDiagonales(List<Casilla> lista)
+        {
             bool esBlanco = this.Bando == Color.Blanco;
-            int filaSiguiente = esBlanco ? actual.Coordenadas.Fila+1 : actual.Coordenadas.Fila-1, columnaActual = (int)actual.Coordenadas.Columna;
-            Casilla diagIzquierda = (-1 < filaSiguiente) && (filaSiguiente < 8) && (columnaActual-1) > 0 ? tablero.MuestraCasilla(filaSiguiente, (Coordenada.Letra)(columnaActual-1)) : null;
-            Casilla diagDerecha = (-1 < filaSiguiente) && (filaSiguiente < 8) && (columnaActual+1) < 8 ? tablero.MuestraCasilla(filaSiguiente, (Coordenada.Letra)(columnaActual+1)) : null;
-            if(diagIzquierda != null && diagIzquierda.Trebejo != null){
+            int filaSiguiente = esBlanco ? PosicionActual.Coordenadas.Fila+1 : PosicionActual.Coordenadas.Fila-1, columnaPosicionActual = (int)PosicionActual.Coordenadas.Columna;
+            Casilla diagIzquierda = (-1 < filaSiguiente) && (filaSiguiente < 8) && (columnaPosicionActual-1) > 0 ? this.Mesa.MuestraCasilla(filaSiguiente, (Coordenada.Letra)(columnaPosicionActual-1)) : null;
+            Casilla diagDerecha = (-1 < filaSiguiente) && (filaSiguiente < 8) && (columnaPosicionActual+1) < 8 ? this.Mesa.MuestraCasilla(filaSiguiente, (Coordenada.Letra)(columnaPosicionActual+1)) : null;
+
+            if(diagIzquierda != null && diagIzquierda.Trebejo != null)
+            {
                 lista.Add(diagIzquierda);
             }
-            if(diagDerecha != null && diagDerecha.Trebejo != null){
+
+            if(diagDerecha != null && diagDerecha.Trebejo != null)
+            {
                 lista.Add(diagDerecha);
             }
+
             return lista;
         }
 
@@ -121,14 +155,16 @@ namespace Recursos
         /*
          * Constructor parametrizado simple de un Peon, definiendo su color
          */
-        public Peon(Color color){
+        public Peon(Color color, Tablero mesa){
             this.Bando = color;
+            this.Mesa = mesa;
         }
 
     }
 
     public class Caballo : Pieza{
-        public  override List<Casilla> PosiblesMovimientos(Tablero tablero, Casilla actual)
+
+        public  override List<Casilla> PosiblesMovimientos()
         {
             return null;
 
@@ -141,7 +177,7 @@ namespace Recursos
     }
 
     public class Dama : Pieza{
-        public  override List<Casilla> PosiblesMovimientos(Tablero tablero, Casilla actual)
+        public  override List<Casilla> PosiblesMovimientos()
         {
             return null;
 
@@ -151,10 +187,12 @@ namespace Recursos
         {
             return "";
         }
+
     }
 
     public class Torre : Pieza{
-        public  override List<Casilla> PosiblesMovimientos(Tablero tablero, Casilla actual)
+
+        public  override List<Casilla> PosiblesMovimientos()
         {
             return null;
 
@@ -167,7 +205,7 @@ namespace Recursos
     }
 
     public class Rey : Pieza{
-        public  override List<Casilla> PosiblesMovimientos(Tablero tablero, Casilla actual)
+        public  override List<Casilla> PosiblesMovimientos()
         {
             return null;
 
@@ -180,7 +218,7 @@ namespace Recursos
     }
 
     public class Alfil : Pieza{
-        public  override List<Casilla> PosiblesMovimientos(Tablero tablero, Casilla actual)
+        public  override List<Casilla> PosiblesMovimientos()
         {
             return null;
 
@@ -196,16 +234,6 @@ namespace Recursos
     // Clase Caballo (Ookami)
     // Clase Alfil (Amorcito)
     // Clase Torre (Cuchurrumin)
-    // Clase Dama (Ookami) //Quien le dice dama mi todo naco?, es la Reina // Le decimos Dama los cultos bebe
-    // Clase Rey (Pastelito)
-}
-
-// Bug (No tocar)
-//Como que bug?
-// - Pues resulta que hay un bug con las versiones de esa clase y no existe para el compilador entonces la tenemos que hacer nosotros
-//Pues no lo pongas y ya bro, poner bugs es malo, daah
-// - Si no la pongo no compila amor
-namespace System.Runtime.CompilerServices
-{
-    internal static class IsExternalInit {}
+    // Clase Dama (Juan)
+    // Clase Rey (Pastelito (evidentemente Juan))
 }

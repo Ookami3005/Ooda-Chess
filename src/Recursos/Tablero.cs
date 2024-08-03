@@ -233,12 +233,13 @@ namespace Recursos
             */
 
             // Prueba de la correcta movilidad de un Peon
-            Pieza peon = new Peon(Color.Negro);
+            Pieza peon = new Peon(Color.Blanco, mesa);
             Casilla demo = mesa.Escaques[6,0];
             demo.Trebejo = peon;
+            peon.PosicionActual = demo;
             // mesa.Escaques[5,1].Trebejo = new Caballo();
             Console.WriteLine(demo.Trebejo);
-            foreach(Casilla moves in peon.PosiblesMovimientos(mesa, demo)){
+            foreach(Casilla moves in peon.PosiblesMovimientos()){
                 Console.WriteLine(moves.Coordenadas);
             }
         }
